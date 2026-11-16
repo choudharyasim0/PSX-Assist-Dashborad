@@ -3,8 +3,8 @@ title: PSX Assist Dashboard
 emoji: 📈
 colorFrom: green
 colorTo: indigo
-sdk: docker
-app_port: 7860
+sdk: gradio
+app_file: app.py
 pinned: false
 ---
 # PSX Assist Dashboard
@@ -39,10 +39,10 @@ Browser ko API keys nahi bheji jatin. `.env` ko share ya commit na karein.
 
 ## Hugging Face Spaces
 
-Repository ko Hugging Face Space mein Docker SDK ke saath deploy karein. `Dockerfile`
-app ko port `7860` par chalata hai. Secrets ko Space Settings mein configure
-karein. `SPACE_ID` pehchanne par app `0.0.0.0` aur port `7860` istemal karti hai.
-Space ki temporary disk par `.env` tabdeeliyan mustaqil nahi hotin.
+Space mein `app.py`, `server/`, `web/`, aur `README.md` upload karein. Secrets ko
+Space Settings mein configure karein. `SPACE_ID` pehchanne par app `0.0.0.0`
+aur port `7860` istemal karti hai. Space ki temporary disk par `.env` tabdeeliyan
+mustaqil nahi hotin.
 
 ## Render par free deployment
 
