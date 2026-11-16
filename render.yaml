@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: psx-assist-dashboard
+    runtime: python
+    plan: free
+    buildCommand: python -m compileall -q app.py server
+    startCommand: python app.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: HOST
+        value: 0.0.0.0

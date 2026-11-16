@@ -44,6 +44,19 @@ Space Settings mein configure karein. `SPACE_ID` pehchanne par app `0.0.0.0`
 aur port `7860` istemal karti hai. Space ki temporary disk par `.env` tabdeeliyan
 mustaqil nahi hotin.
 
+## Render par free deployment
+
+GitHub repository ko Render se connect karke **New + → Blueprint** chunein.
+Render, `render.yaml` se `psx-assist-dashboard` web service banayega; plan free
+hai aur app ka health check `/healthz` par hai. Free web services inactivity ke
+baad sleep ho sakti hain, is liye agla request chalne mein zyada waqt le sakta hai.
+
+AI aur news ke liye `GEMINI_API_KEY`, `GROQ_API_KEY`, aur `GNEWS_API_KEY` ko
+Render service ke Environment settings mein optional secrets ke taur par add
+karein. In keys ko GitHub ya chat mein share na karein. `APP_PASSWORD` set karna
+deployment ko Basic Authentication se protect karta hai; warna service ka URL
+publicly accessible hoga.
+
 ## Data aur ehtiyaat
 
 Market prices aur khabrein sirf PSX Data Portal aur GNews se aati hain. PSX ke

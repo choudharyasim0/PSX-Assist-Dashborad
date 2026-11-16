@@ -12,7 +12,7 @@ def main():
     host, port = config.host(), config.port()
     url = f"http://localhost:{port}"
     print(f"Chal gaya: {url}")
-    if not config.on_hf():
+    if not config.on_hf() and not config.get("PORT"):
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
     ThreadingHTTPServer((host, port), Handler).serve_forever()
 
