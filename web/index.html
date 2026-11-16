@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ur-Latn" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09111f">
+  <meta name="description" content="Pakistan Stock Exchange ka smart AI investment assistant.">
+  <title>PSX Assist Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="PSX Assist Dashboard" data-i18n-aria-label="PSX Assist Dashboard">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span><strong>PSX Assist</strong><small data-i18n="Pakistan Stock Exchange ka smart assistant">Pakistan Stock Exchange ka smart assistant</small></span>
+      </a>
+      <div id="connectionStatus" class="connection"><span class="status-dot"></span><span data-i18n="Server se rabta ho raha hai">Server se rabta ho raha hai</span></div>
+    </header>
+
+    <main>
+      <section id="panel-market" class="view active" aria-labelledby="marketTitle">
+        <div class="page-heading">
+          <div><p class="eyebrow" data-i18n="BAZAAR KA KHALASA">BAZAAR KA KHALASA</p><h1 id="marketTitle" data-i18n="Aaj ka bazaar">Aaj ka bazaar</h1><p class="muted" data-i18n="Pakistan Stock Exchange ki taza surat-e-haal">Pakistan Stock Exchange ki taza surat-e-haal</p></div>
+          <div class="updated-label" id="marketFreshness" data-i18n="Asal data ka intezar hai">Asal data ka intezar hai</div>
+        </div>
+        <div class="index-grid" id="indexCards" aria-live="polite"></div>
+        <div class="market-layout">
+          <div class="main-column">
+            <section class="card search-card" aria-label="Share talash" data-i18n-aria-label="Share talash">
+              <div class="section-title"><div><p class="eyebrow" data-i18n="Share talash">SHARE TALASH</p><h2 data-i18n="Share talash karein">Share talash karein</h2></div><span class="live-pill" data-i18n="PSX KA ASAL DATA">PSX KA ASAL DATA</span></div>
+              <form id="stockSearchForm" class="search-form">
+                <label class="sr-only" for="stockSearch" data-i18n="Share ka naam ya symbol">Share ka naam ya symbol</label>
+                <input id="stockSearch" list="stockOptions" autocomplete="off" placeholder="Misal: OGDC ya company ka naam" data-i18n-placeholder="Misal: OGDC ya company ka naam" required>
+                <datalist id="stockOptions"></datalist>
+                <button class="button button-primary" type="submit" data-i18n="Talash">Talash</button>
+              </form>
+              <p class="helper-text" id="symbolNotice" data-i18n="Share ki list aa rahi hai...">Share ki list aa rahi hai...</p>
+            </section>
+
+            <section class="card quote-card" id="quoteCard">
+              <div class="section-title quote-heading"><div><p class="eyebrow" data-i18n="CHUNA HUA SHARE">CHUNA HUA SHARE</p><h2 id="quoteName" data-i18n="Koi share chunein">Koi share chunein</h2><p class="muted" id="quoteSymbol" data-i18n="PSX symbol">PSX symbol</p></div><span class="source-badge" id="quoteSource" data-i18n="Data dastiyab nahi">Data dastiyab nahi</span></div>
+              <div class="quote-price-row"><div><div class="price-value" id="quotePrice">—</div><div class="price-change" id="quoteChange" data-i18n="Asal quote milne par yahan nazar aayega">Asal quote milne par yahan nazar aayega</div></div><div class="quote-updated" id="quoteUpdated">—</div></div>
+              <div class="quote-stats">
+                <div><span data-i18n="Din ki bulandi">Din ki bulandi</span><strong id="quoteHigh">—</strong></div>
+                <div><span data-i18n="Din ki kami">Din ki kami</span><strong id="quoteLow">—</strong></div>
+                <div><span data-i18n="Volume">Volume</span><strong id="quoteVolume">—</strong></div>
+              </div>
+              <div class="chart-toolbar"><div><h3 data-i18n="Qeemat ka chart">Qeemat ka chart</h3><span id="chartStatus" class="muted" data-i18n="Data ka intezar hai">Data ka intezar hai</span></div><div class="segmented" role="group" aria-label="Chart ka waqt" data-i18n-aria-label="Chart ka waqt"><button type="button" class="active" data-period="int" data-i18n="Aaj ka">Aaj ka</button><button type="button" data-period="eod" data-i18n="Roz ka">Roz ka</button></div></div>
+              <div class="chart-wrap"><canvas id="priceChart" role="img" aria-label="Share ki qeemat ka chart" data-i18n-aria-label="Share ki qeemat ka chart"></canvas><div id="chartEmpty" class="chart-empty" data-i18n="Chart data milne par yahan dikhaya jayega.">Chart data milne par yahan dikhaya jayega.</div></div>
+              <div class="card-actions"><button type="button" id="refreshQuote" class="button button-quiet" data-i18n="Qeemat taza karein">Qeemat taza karein</button><span class="muted" data-i18n="Chart tabhi taza hoga jab yeh page khula ho.">Chart tabhi taza hoga jab yeh page khula ho.</span></div>
+            </section>
+          </div>
+          <aside class="card portfolio-glance">
+            <div class="section-title"><div><p class="eyebrow" data-i18n="Aap ka portfolio">Aap ka portfolio</p><h2 data-i18n="Portfolio khulasa">Portfolio khulasa</h2></div><button type="button" class="text-button" data-open="portfolio" data-i18n="Tafseel">Tafseel</button></div>
+            <div class="glance-stats">
+              <div><span data-i18n="Lagayi hui raqam">Lagayi hui raqam</span><strong id="glanceInvested">—</strong></div>
+              <div><span data-i18n="Abhi ki qeemat">Abhi ki qeemat</span><strong id="glanceCurrent">—</strong></div>
+              <div><span data-i18n="Munafa / nuqsan">Munafa / nuqsan</span><strong id="glanceProfit">—</strong></div>
+              <div><span data-i18n="Holdings">Holdings</span><strong id="glanceHoldings">0</strong></div>
+            </div>
+            <div class="mini-chart-wrap"><canvas id="glanceChart" role="img" aria-label="Portfolio ki taqseem" data-i18n-aria-label="Portfolio ki taqseem"></canvas><div id="glanceChartEmpty" class="chart-empty" data-i18n="Abhi holdings nahi hain.">Abhi holdings nahi hain.</div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="panel-news" class="view" aria-labelledby="newsTitle">
+        <div class="page-heading"><div><p class="eyebrow" data-i18n="KHABRON KA AI JAIZA">KHABRON KA AI JAIZA</p><h1 id="newsTitle" data-i18n="Bazaar ki khabrain">Bazaar ki khabrain</h1><p class="muted" data-i18n="GNews se taza khabrain aur AI ka ehtiyati jaiza">GNews se taza khabrain aur AI ka ehtiyati jaiza</p></div><button id="loadNews" class="button button-primary" type="button" data-i18n="Taza khabrain laayein">Taza khabrain laayein</button></div>
+        <div class="card news-filter">
+          <label for="newsStockFilter" data-i18n="Kisi share se mutaliq khabar dekhein">Kisi share se mutaliq khabar dekhein</label>
+          <div class="search-form"><input id="newsStockFilter" list="stockOptions" placeholder="Symbol ya company ka naam" data-i18n-placeholder="Symbol ya company ka naam"><button id="filterNews" class="button button-quiet" type="button" data-i18n="Filter">Filter</button><button id="clearNewsFilter" class="button button-quiet" type="button" data-i18n="Filter hataein">Filter hataein</button></div>
+          <p class="helper-text" id="newsStatus" data-i18n="News API se asal khabrain mangwayein.">News API se asal khabrain mangwayein.</p>
+        </div>
+        <div id="newsArticles" class="news-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="panel-portfolio" class="view" aria-labelledby="portfolioTitle">
+        <div class="page-heading"><div><p class="eyebrow" data-i18n="PORTFOLIO MANAGEMENT">PORTFOLIO MANAGEMENT</p><h1 id="portfolioTitle" data-i18n="Aap ka portfolio">Aap ka portfolio</h1><p class="muted" data-i18n="Holdings aap ke browser mein rehti hain; API keys yahan save nahi hotin.">Holdings aap ke browser mein rehti hain; API keys yahan save nahi hotin.</p></div><button id="updatePrices" class="button button-primary" type="button" data-i18n="Prices Update Karein">Prices Update Karein</button></div>
+        <div id="portfolioNotice" class="notice hidden" role="status"></div>
+        <div class="summary-grid">
+          <article class="card summary-card"><span data-i18n="Lagayi hui raqam">Lagayi hui raqam</span><strong id="totalInvested">—</strong></article>
+          <article class="card summary-card"><span data-i18n="Abhi ki portfolio qeemat">Abhi ki portfolio qeemat</span><strong id="totalCurrent">—</strong></article>
+          <article class="card summary-card"><span data-i18n="Kul munafa / nuqsan">Kul munafa / nuqsan</span><strong id="totalProfit">—</strong><small id="totalReturn" data-i18n="Taza qeemat darkar hai">Taza qeemat darkar hai</small></article>
+          <article class="card summary-card"><span data-i18n="Holdings ki tadaad">Holdings ki tadaad</span><strong id="holdingCount">0</strong></article>
+        </div>
+        <div class="portfolio-layout">
+          <section class="card">
+            <div class="section-title"><div><p class="eyebrow" data-i18n="Holdings">HOLDINGS</p><h2 data-i18n="Shares shamil karein">Shares shamil karein</h2></div></div>
+            <form id="holdingForm" class="holding-form">
+              <label><span data-i18n="Symbol">Symbol</span><input id="holdingSymbol" list="stockOptions" maxlength="20" placeholder="Misal: OGDC" data-i18n-placeholder="Misal: OGDC" required></label>
+              <label><span data-i18n="Units">Units</span><input id="holdingQuantity" type="number" min="0.0001" step="any" placeholder="100" required></label>
+              <label><span data-i18n="Ausat khareed qeemat">Ausat khareed qeemat</span><input id="holdingBuyPrice" type="number" min="0.0001" step="any" placeholder="250.00" required></label>
+              <p class="helper-text" data-i18n="Current price is fetched automatically from PSX.">Current price is fetched automatically from PSX.</p>
+              <button class="button button-primary" type="submit" data-i18n="Holding shamil karein">Holding shamil karein</button>
+            </form>
+          </section>
+          <section class="card allocation-card"><div class="section-title"><div><p class="eyebrow" data-i18n="PORTFOLIO KI TAQSEEM">PORTFOLIO KI TAQSEEM</p><h2 data-i18n="Portfolio ki taqseem">Portfolio ki taqseem</h2></div></div><div class="allocation-wrap"><canvas id="allocationChart" role="img" aria-label="Portfolio ki taqseem" data-i18n-aria-label="Portfolio ki taqseem"></canvas><div id="allocationEmpty" class="chart-empty" data-i18n="Taqseem dikhane ke liye holdings shamil karein.">Taqseem dikhane ke liye holdings shamil karein.</div></div><p id="allocationDetail" class="helper-text" data-i18n="Chart ke kisi hisse par tap karein.">Chart ke kisi hisse par tap karein.</p></section>
+        </div>
+        <section class="card table-card"><div class="section-title"><div><p class="eyebrow" data-i18n="HISAAB">HISAAB</p><h2 data-i18n="Aap ki holdings">Aap ki holdings</h2></div></div><div class="table-scroll"><table><thead><tr><th data-i18n="Symbol / company">Symbol / company</th><th data-i18n="Units">Units</th><th data-i18n="Ausat qeemat">Ausat qeemat</th><th data-i18n="Abhi ki qeemat">Abhi ki qeemat</th><th data-i18n="Lagayi hui raqam">Lagayi raqam</th><th data-i18n="Abhi ki value">Abhi ki value</th><th data-i18n="Munafa / nuqsan">Munafa / nuqsan</th><th></th></tr></thead><tbody id="holdingsTable"></tbody></table></div><p id="holdingsEmpty" class="empty-state" data-i18n="Abhi koi holding shamil nahi ki gayi.">Abhi koi holding shamil nahi ki gayi.</p></section>
+        <section class="card ai-card"><div class="section-title"><div><p class="eyebrow" data-i18n="AI PORTFOLIO SAATHI">AI PORTFOLIO SAATHI</p><h2 data-i18n="Portfolio ka ehtiyati jaiza">Portfolio ka ehtiyati jaiza</h2></div><span class="source-badge">Gemini / Groq</span></div><p class="muted" data-i18n="AI sirf aap ke diye gaye hisaab ko dekhega. Yeh signal ya guaranteed prediction nahi hai.">AI sirf aap ke diye gaye hisaab ko dekhega. Yeh signal ya guaranteed prediction nahi hai.</p><button id="analyzePortfolio" type="button" class="button button-primary" data-i18n="AI Se Portfolio Ka Jaiza Lein">AI Se Portfolio Ka Jaiza Lein</button><div id="portfolioAnalysis" class="analysis-output" aria-live="polite"></div></section>
+      </section>
+
+      <section id="panel-documents" class="view" aria-labelledby="documentsTitle">
+        <div class="page-heading"><div><p class="eyebrow" data-i18n="DOCUMENT KI WAZAHAT">DOCUMENT KI WAZAHAT</p><h1 id="documentsTitle" data-i18n="Document samjhein">Document samjhein</h1><p class="muted" data-i18n="Broker statement, financial report ya market summary ka Roman Urdu khulasa">Broker statement, financial report ya market summary ka Roman Urdu khulasa</p></div></div>
+        <div class="card document-card">
+          <label class="upload-zone" for="pdfFile"><span class="upload-icon" aria-hidden="true">PDF</span><strong data-i18n="PDF file upload karein">PDF file upload karein</strong><span data-i18n="Sirf pehle 15 safhon ka text nikala jayega.">Sirf pehle 15 safhon ka text nikala jayega.</span><input id="pdfFile" type="file" accept="application/pdf"></label>
+          <p id="pdfStatus" class="helper-text" aria-live="polite" data-i18n="Agar PDF scanned ho to us ka text neeche paste karein.">Agar PDF scanned ho to us ka text neeche paste karein.</p>
+          <label for="documentInput" data-i18n="Document ka text">Document ka text</label><textarea id="documentInput" maxlength="12000" rows="10" placeholder="Yahan document ka text paste karein..." data-i18n-placeholder="Yahan document ka text paste karein..."></textarea>
+          <div class="card-actions"><span id="documentCount" class="muted">0 / 12,000 haroof</span><button id="explainDocument" type="button" class="button button-primary" data-i18n="Roman Urdu mein samjhaein">Roman Urdu mein samjhaein</button></div>
+          <div id="documentAnalysis" class="analysis-output" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="panel-settings" class="view" aria-labelledby="settingsTitle">
+        <div class="page-heading"><div><p class="eyebrow" data-i18n="APP KI SETTING">APP KI SETTING</p><h1 id="settingsTitle" data-i18n="App ki maloomat">App ki maloomat</h1><p class="muted" data-i18n="Configuration status — koi API key browser mein nahi dikhayi jati.">Configuration status — koi API key browser mein nahi dikhayi jati.</p></div><button id="refreshSettings" class="button button-quiet" type="button" data-i18n="Dobara jaanchein">Dobara jaanchein</button></div>
+        <section class="card language-card"><label for="languageSelect" data-i18n="Zaban">Zaban</label><select id="languageSelect" aria-label="Zaban" data-i18n-aria-label="Zaban"><option value="roman" data-i18n="Roman Urdu">Roman Urdu</option><option value="en" data-i18n="English">English</option><option value="ur" data-i18n="Urdu">Urdu</option></select></section>
+        <div class="settings-grid">
+          <section class="card"><p class="eyebrow" data-i18n="APP">APP</p><h2>PSX Assist Dashboard</h2><dl class="settings-list"><div><dt data-i18n="Version">Version</dt><dd id="appVersion">—</dd></div><div><dt data-i18n="Backend">Backend</dt><dd id="backendStatus">Jaanch ho rahi hai...</dd></div><div><dt data-i18n="PSX data">PSX data</dt><dd id="psxStatus">Jaanch ho rahi hai...</dd></div><div><dt data-i18n="GNews">GNews</dt><dd id="gnewsStatus">Jaanch ho rahi hai...</dd></div></dl></section>
+          <section class="card"><p class="eyebrow" data-i18n="AI KI KHUDMAT">AI KI KHUDMAT</p><h2 data-i18n="Server ki setting">Server ki setting</h2><dl class="settings-list"><div><dt data-i18n="Gemini API">Gemini API</dt><dd id="geminiStatus">—</dd></div><div><dt data-i18n="Groq API">Groq API</dt><dd id="groqStatus">—</dd></div><div><dt data-i18n="GNews API">GNews API</dt><dd id="gnewsApiStatus">—</dd></div></dl><p class="helper-text" data-i18n="API keys server ke environment ya deployment Secrets mein rakhi jati hain.">API keys server ke environment ya deployment Secrets mein rakhi jati hain.</p></section>
+        </div>
+        <div class="card deployment-note"><h2 data-i18n="Hugging Face Spaces">Hugging Face Spaces</h2><p data-i18n="Space ki temporary disk par .env ki tabdeeliyan mehfooz nahi rehtin. Keys ko Space Settings ke Secrets mein set karein.">Space ki temporary disk par .env ki tabdeeliyan mehfooz nahi rehtin. Keys ko Space Settings ke Secrets mein set karein.</p></div>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="Dashboard ke tabs" data-i18n-aria-label="Dashboard ke tabs">
+      <button type="button" class="nav-item active" data-view="market"><span aria-hidden="true">▦</span><span data-i18n="Market">Market</span></button>
+      <button type="button" class="nav-item" data-view="news"><span aria-hidden="true">◉</span><span data-i18n="Khabrain">Khabrain</span></button>
+      <button type="button" class="nav-item" data-view="portfolio"><span aria-hidden="true">▤</span><span data-i18n="Portfolio">Portfolio</span></button>
+      <button type="button" class="nav-item" data-view="documents"><span aria-hidden="true">▧</span><span data-i18n="Documents">Documents</span></button>
+      <button type="button" class="nav-item" data-view="settings"><span aria-hidden="true">⚙</span><span data-i18n="Settings">Settings</span></button>
+    </nav>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+</body>
+</html>
